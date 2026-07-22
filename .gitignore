@@ -1,0 +1,30 @@
+# secrets / auth
+cookies.json
+cookies.full.json
+*.sid
+.env
+.env.*
+
+# runtime output
+output/**
+!output/screenshots/
+output/screenshots/**
+!output/screenshots/.gitkeep
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# local dumps / probes
+output/_next/
+output/auth/
+output/probes/
