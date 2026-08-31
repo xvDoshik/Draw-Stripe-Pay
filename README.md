@@ -1,46 +1,50 @@
-# Draw Stripe Pay
+EN | [RU](docs/README_RU.md)
 
-Локальный генератор «доказательств» покупки: реалистичный скриншот страницы **Reveal Product** (Crypto Voucher / Driffle-стиль) + готовый текст для поста.
+## Draw Stripe Pay 🎨
 
-Один запуск — картинка, caption и json с параметрами. Данные, вьюпорт, замазка и воркер шафлятся так, чтобы серия скринов не выглядела клонами.
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+
+Local generator for purchase "proof" screenshots: realistic **Reveal Product** page (Crypto Voucher / Driffle-style) + ready post text.
+
+One run - image, caption, and json with parameters. Data, viewport, redaction, and worker shuffle so a series of screenshots does not look like clones.
 
 ---
 
-## Что умеет
+## ✨ Features
 
-| Блок | Описание |
+| Block | Description |
 |------|----------|
-| **Reveal UI** | Тёмная вёрстка под Driffle: степпер Cart → Checkout → Reveal, mail-баннер, модалка с ключом |
-| **Суммы** | Номиналы **100–350 EUR**, упор на **110–150**, реже 200–250 и до 350 |
-| **Почта** | Длинные `имя.фамилия@…` на реальных доменах (gmx, libero, wp.pl, orange.fr, …) |
-| **Дата reveal** | Всегда **сегодняшний UTC**, время рандомное, не из будущего |
-| **Код** | Формат `CV{amount}EU-XXXXX-…` |
-| **Замазка** | Сплошной штрих «пальцем» как в редакторе Telegram: палитра кистей TG, email + код |
-| **Fingerprint** | Viewport / aspect / DPR / zoom / padding / png\|jpeg — чтобы кадры отличались |
-| **Caption** | Готовый текст Profit + Worker из пула тегов |
+| **Reveal UI** | Dark Driffle-style layout: stepper Cart → Checkout → Reveal, mail banner, key modal |
+| **Amounts** | Denominations **100-350 EUR**, focus on **110-150**, less often 200-250 up to 350 |
+| **Email** | Long `name.surname@…` on real domains (gmx, libero, wp.pl, orange.fr, …) |
+| **Reveal date** | Always **today's UTC**, random time, not from the future |
+| **Code** | Format `CV{amount}EU-XXXXX-…` |
+| **Redaction** | Solid Telegram-style brush stroke: TG brush palette, email + code |
+| **Fingerprint** | Viewport / aspect / DPR / zoom / padding / png\|jpeg - frames differ |
+| **Caption** | Ready Profit + Worker text from tag pool |
 
 ---
 
-## Структура репо
+## 📁 Structure
 
 ```
 draw-stripe-pay/
-├── screenshot_reveal.py      # основной генератор
+├── screenshot_reveal.py      # main generator
 ├── driffle-fake-reveal.user.js
-├── dump_driffle.py           # опциональный дамп сайта
-├── reveal-assets/            # svg-иконки / лого
+├── dump_driffle.py           # optional site dump
+├── reveal-assets/            # svg icons / logos
 ├── requirements.txt
-├── output/screenshots/       # сюда пишутся результаты (в git не коммитятся)
+├── output/screenshots/       # results go here (not committed)
 └── README.md
 ```
 
-В `.gitignore`: куки, дампы, `__pycache__`, `.venv`, всё содержимое `output/screenshots/` кроме `.gitkeep`.
+In `.gitignore`: cookies, dumps, `__pycache__`, `.venv`, all `output/screenshots/` except `.gitkeep`.
 
 ---
 
-## Установка
+## 🚀 Quick start
 
-Нужны Python 3.10+ и Chromium через Playwright.
+Python 3.10+ and Chromium via Playwright required.
 
 ```bash
 cd draw-stripe-pay
@@ -50,18 +54,18 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-Зависимости: `playwright`, `Pillow`.
+Dependencies: `playwright`, `Pillow`.
 
 ---
 
-## Быстрый старт
+## 🎮 Usage
 
 ```bash
 source .venv/bin/activate
 python screenshot_reveal.py
 ```
 
-Пример вывода в консоль:
+Example console output:
 
 ```
 🚀 Profit: 140 EUR
@@ -71,24 +75,24 @@ text  output/screenshots/reveal-cv140eu-....txt
 cfg   output/screenshots/reveal-cv140eu-....json
 ```
 
-Рядом с PNG/JPG всегда:
+Alongside PNG/JPG always:
 
-- **`.txt`** — caption для копипаста в чат  
-- **`.json`** — полный cfg (email, code, amount, fingerprint, worker, …)
+- **`.txt`** - caption for copy-paste to chat  
+- **`.json`** - full cfg (email, code, amount, fingerprint, worker, …)
 
 ---
 
-## Caption
+## 📝 Caption
 
-Формат фиксированный:
+Fixed format:
 
 ```
 🚀 Profit: {amount} EUR
 🥷 Worker: @{tag}
 ```
 
-`amount` = тот же номинал, что на скрине.  
-`Worker` берётся из пула (шафл; при `--count N` теги размазываются циклами без комков):
+`amount` = same denomination as on screen.  
+`Worker` from pool (shuffle; with `--count N` tags spread cyclically without clumps):
 
 | # | Tag |
 |---|-----|
@@ -100,7 +104,7 @@ cfg   output/screenshots/reveal-cv140eu-....json
 | 6 | `@cykru` |
 | 7 | `@Aleksand748e` |
 
-Принудительно:
+Force specific worker:
 
 ```bash
 python screenshot_reveal.py --worker @xv_Doshik
@@ -108,30 +112,30 @@ python screenshot_reveal.py --worker @xv_Doshik
 
 ---
 
-## Рандомизация данных
+## 🎲 Data randomization
 
-По умолчанию каждый запуск крутит новый cfg:
+Each run spins a new cfg by default:
 
-- **Продукт** — сумма + обложка с CDN (для редких номиналов — ближайший арт)
-- **Email** — `firstname.lastname` / `first.m.last` / `first_last` + цифры
-- **Locale / флаг** — EUR + IT/DE/FR/ES (языки English / Deutsch / Italiano / Français)
-- **Revealed on** — дата = сейчас (UTC), время ≤ now
-- **Fingerprint** — размер окна, DPR, zoom, отступы, full_page, png/jpeg
-- **Замазка** — цвет кисти TG, форма штриха; код закрыт целиком, длина ≈ до середины поля
+- **Product** - amount + CDN cover (for rare denominations - nearest art)
+- **Email** - `firstname.lastname` / `first.m.last` / `first_last` + digits
+- **Locale / flag** - EUR + IT/DE/FR/ES (languages English / Deutsch / Italiano / Français)
+- **Revealed on** - date = now (UTC), time ≤ now
+- **Fingerprint** - window size, DPR, zoom, padding, full_page, png/jpeg
+- **Redaction** - TG brush color, stroke shape; code fully covered, length ≈ to mid-field
 
-Воспроизводимый прогон:
+Reproducible run:
 
 ```bash
 python screenshot_reveal.py --seed 42
 ```
 
-Без шафла fingerprint (фиксированный 1440×900 @2x):
+No fingerprint shuffle (fixed 1440×900 @2x):
 
 ```bash
 python screenshot_reveal.py --no-fingerprint
 ```
 
-Фиксированный дефолтный продукт (можно добить CLI-оверрайдами):
+Fixed default product (CLI overrides available):
 
 ```bash
 python screenshot_reveal.py --fixed --email someone@gmx.de
@@ -139,16 +143,16 @@ python screenshot_reveal.py --fixed --email someone@gmx.de
 
 ---
 
-## Замазка (redact)
+## 🖌 Redaction
 
-После скриншота Pillow рисует **сплошной** штрих поверх:
+After screenshot Pillow draws a **solid** stroke over:
 
-1. email в баннере  
-2. кода в Product Detail  
+1. email in banner  
+2. code in Product Detail  
 
-Стиль — кисть Telegram (красный / оранжевый / жёлтый / зелёный / голубой / синий / фиолетовый / розовый / белый / серый). Один цвет на кадр, меняется только форма.
+Style - Telegram brush (red / orange / yellow / green / cyan / blue / purple / pink / white / gray). One color per frame, only shape changes.
 
-Отключить:
+Disable:
 
 ```bash
 python screenshot_reveal.py --no-redact
@@ -156,87 +160,89 @@ python screenshot_reveal.py --no-redact
 
 ---
 
-## Пакетная генерация
+## 📦 Batch generation
 
 ```bash
-# 20 рандомных кадров
+# 20 random frames
+
+
 python screenshot_reveal.py --count 20
 
-# только фото без json — вручную удали .json/.html или забери из папки
+# photos only without json - manually delete .json/.html or pick from folder
 ```
 
-С `--count` нельзя указывать `-o` (один путь на много файлов).
+With `--count` you cannot use `-o` (one path for many files).
 
-Кастомная папка — цикл снаружи или копируй из `output/screenshots/`.
+Custom folder - loop externally or copy from `output/screenshots/`.
 
 ---
 
-## CLI (полный список)
+## 📋 Commands
 
 ```bash
 python screenshot_reveal.py -h
 ```
 
-| Флаг | Смысл |
+| Flag | Meaning |
 |------|--------|
-| `--count N` | N скринов подряд |
-| `--seed N` | seed RNG (+i для каждого из count) |
-| `--fixed` | DEFAULTS вместо полного randomize |
-| `--worker @tag` | зафиксировать воркера |
-| `--email` / `--code` / `--title` / … | точечные оверрайды полей |
-| `--width` `--height` `--dpr` | вьюпорт |
-| `--format png\|jpeg` | формат файла |
-| `--no-full-page` | кадр = viewport, не вся страница |
-| `--no-fingerprint` | дефолтный fingerprint |
-| `--no-redact` | без замазки |
-| `-o PATH` | путь к одному файлу |
+| `--count N` | N screenshots in a row |
+| `--seed N` | seed RNG (+i for each of count) |
+| `--fixed` | DEFAULTS instead of full randomize |
+| `--worker @tag` | lock worker |
+| `--email` / `--code` / `--title` / … | per-field overrides |
+| `--width` `--height` `--dpr` | viewport |
+| `--format png\|jpeg` | file format |
+| `--no-full-page` | frame = viewport, not full page |
+| `--no-fingerprint` | default fingerprint |
+| `--no-redact` | no redaction |
+| `-o PATH` | path to single file |
 
 ---
 
-## Tampermonkey-оверлей
+## 🔧 Tampermonkey overlay
 
-Файл `driffle-fake-reveal.user.js` — демо Reveal поверх реального driffle.com.
+File `driffle-fake-reveal.user.js` - Reveal demo overlay on real driffle.com.
 
-Триггеры:
+Triggers:
 
 - hash `#driffle-reveal`
 - query `?driffle_reveal=1`
-- пункт меню / FAB «Reveal demo»
+- menu item / FAB "Reveal demo"
 
-Стили и ассеты завязаны на токены/CDN Driffle (не generic mock).
+Styles and assets tied to Driffle tokens/CDN (not generic mock).
 
 ---
 
-## Dump сайта (опционально)
+## 🔍 Site dump (optional)
 
 ```bash
 python dump_driffle.py
 ```
 
-Тянет публичные страницы/чанки Next.js в `output/` для ресёрча.  
-**Куки и авторизационные дампы в git не входят** — см. `.gitignore`.  
-Сессионные `cookies.json` / `cookies.full.json` держи только локально.
+Pulls public pages/Next.js chunks to `output/` for research.  
+**Cookies and auth dumps are not in git** - see `.gitignore`.  
+Session `cookies.json` / `cookies.full.json` - local only.
 
 ---
 
-## Типичный воркфлоу
+## 🔄 Typical workflow
 
 1. `python screenshot_reveal.py --count 10`  
-2. Открыть `output/screenshots/`  
-3. Картинку + текст из `.txt` — в пост  
-4. При необходимости подогнать: `--seed`, `--worker`, `--format jpeg`, `--width 1920`
+2. Open `output/screenshots/`  
+3. Image + text from `.txt` - into post  
+4. If needed tune: `--seed`, `--worker`, `--format jpeg`, `--width 1920`
 
 ---
 
-## Замечания
+## ⚠️ Notes
 
-- Нужен интернет: шрифты Onest, обложки и иконки грузятся с CDN Driffle.  
-- JPEG чуть легче и «шумнее» по артефактам — удобно для разнообразия серии.  
-- Обложки на CDN есть не для всех номиналов: для 200–350 подставляется ближайший арт, в title/code сумма всё равно целевая.  
-- Не коммить `output/screenshots/*` и любые cookie-файлы.
+- Internet required: Onest fonts, covers and icons load from Driffle CDN.  
+- JPEG is slightly lighter and noisier in artifacts - good for series variety.  
+- CDN covers not available for all denominations: for 200-350 nearest art is substituted, title/code still target amount.  
+- Do not commit `output/screenshots/*` or any cookie files.
 
 ---
 
-## Лицензия / использование
+## 📄 License / usage
 
-Внутренний инструмент. Используй на свой страх и риск; репозиторий не содержит чужих сессий и продакшен-секретов.
+Internal tool. Use at your own risk; repository contains no third-party sessions or production secrets.
